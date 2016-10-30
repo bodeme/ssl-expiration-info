@@ -24,7 +24,7 @@ if(!is_array($yaml['hosts'])) {
 }
 
 if(isset($yaml['mail']['notification']) && is_array($yaml['mail']['notification'])) {
-  $mailRecipients =  $yaml['mail']['notification'];
+  $mailRecipients = $yaml['mail']['notification'];
 }
 
 if(is_integer($yaml['ssl']['threshold'])) {
