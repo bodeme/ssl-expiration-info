@@ -59,8 +59,8 @@ class Check {
    * Initialize SSL Certificate
    */
   private function initialize() {
-    $get = stream_context_create([
-        'ssl' => ['capture_peer_cert' => true]
+    $options = stream_context_create([
+        'ssl' => ['capture_peer_cert' => true],
       ]
     );
 
@@ -68,25 +68,31 @@ class Check {
     $errorNumber = null;
     $errorString = null;
 
-    $read = stream_socket_client(
+
+    $context = stream_socket_client(
       'ssl://' . $host->getName() . ':' . $host->getPort(),
       $errorNumber,
       $errorString,
       $this->getTimeout(),
       STREAM_CLIENT_CONNECT,
-      $get
+      $options
     );
 
     if($errorNumber > 0) {
       throw new \Exception(sprintf('Error while opening socket to "%s:%d": %s', $host->getName(), $host->getPort(), $errorString));
     }
 
-    if(!is_resource($read)) {
+    if(!is_resource($context)) {
       throw new \Exception(sprintf('Error while reading ssl certificate from "%s:%d".', $host->getName(), $host->getPort()));
     }
 
-    $certificate = stream_context_get_params($read);
+    $certificate = stream_context_get_params($context);
     $this->setSslCertificate($certificate);
+
+    if(!isset($certificate['options']) || !isset($certificate['options']['ssl']) || !isset($certificate['options']['ssl']['peer_certificate'])) {
+      throw new \Exception(sprintf('Error while parsing ssl certificate from "%s:%d".', $host->getName(), $host->getPort()));
+    }
+
     $this->setSslCertificateInfo(openssl_x509_parse($certificate['options']['ssl']['peer_certificate']));
   }
 

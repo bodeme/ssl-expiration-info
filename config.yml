@@ -1,0 +1,13 @@
+--- # Check the following hosts
+
+ssl:
+  - threshold: 7
+
+mail:
+  - from: example@example.org
+  - notification:
+#    - example@example.org
+
+hosts:
+  - example.org 443
+  - example.com 443

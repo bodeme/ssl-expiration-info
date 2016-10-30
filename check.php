@@ -22,7 +22,7 @@ if(!is_array($yaml['hosts'])) {
   throw new \Exception('Missing hosts in yaml file.');
 }
 
-if(is_array($yaml['mail'][0]['notification'])) {
+if(isset($yaml['mail'][0]['notification']) && is_array($yaml['mail'][0]['notification'])) {
   $mailRecipients =  $yaml['mail'][0]['notification'];
 }
 
