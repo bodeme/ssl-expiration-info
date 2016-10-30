@@ -80,14 +80,14 @@ if(sizeof($mailRecipients) == 0) {
 } else {
   foreach($mailRecipients as $mailRecipient) {
     $mailer = new PHPMailer();
-    $mailer->setFrom($yaml['mail'][0]['from']);
+    $mailer->setFrom($yaml['mail']['from']);
     $mailer->addAddress($mailRecipient);
     $mailer->Subject = 'SSL Expiration Info';
     $mailer->Body = implode(PHP_EOL, $rows);
     $mailer->send();
 
     $mailer = new PHPMailer();
-    $mailer->setFrom($yaml['mail'][0]['from']);
+    $mailer->setFrom($yaml['mail']['from']);
     $mailer->addAddress($mailRecipient);
     $mailer->Subject = 'SSL Expiration Info WARNING';
     $mailer->Body = implode(PHP_EOL, $rowsWarning);
