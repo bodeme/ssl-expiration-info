@@ -2,6 +2,7 @@
 <?php
 
 use bodeme\ssl\Check;
+use bodeme\ssl\ExpirationInfo;
 use bodeme\ssl\Host;
 
 define('BASE_PATH', dirname(__FILE__));
@@ -38,6 +39,8 @@ foreach($yaml['hosts'] as $host) {
 }
 
 $rows = [];
+$rowsWarning = [];
+
 foreach($hosts as $host) {
   /** @var $host Host */
   try {
@@ -48,12 +51,17 @@ foreach($hosts as $host) {
 
     $state = $info->getInfo();
 
-    $rows[] = sprintf(
+    $row = sprintf(
       '%-40s %s (%d)',
       $host->getName() . ':' . $host->getPort(),
       $state,
       $info->getDaysUntilExpiration()
     );
+
+    $rows[] = $row;
+    if(in_array($state, [ExpirationInfo::STATE_EXPIRING, ExpirationInfo::STATE_EXPIRED])) {
+      $rowsWarning[] = $row;
+    }
 
   } catch(\Exception $e) {
     $rows[] = sprintf(
@@ -65,10 +73,9 @@ foreach($hosts as $host) {
 }
 
 sort($rows);
-$message = implode(PHP_EOL, $rows);
 
 if(sizeof($mailRecipients) == 0) {
-  echo $message;
+  echo implode(PHP_EOL, $rows);
   echo PHP_EOL;
 } else {
   foreach($mailRecipients as $mailRecipient) {
@@ -76,7 +83,14 @@ if(sizeof($mailRecipients) == 0) {
     $mailer->setFrom($yaml['mail'][0]['from']);
     $mailer->addAddress($mailRecipient);
     $mailer->Subject = 'SSL Expiration Info';
-    $mailer->Body = $message;
+    $mailer->Body = implode(PHP_EOL, $rows);
+    $mailer->send();
+
+    $mailer = new PHPMailer();
+    $mailer->setFrom($yaml['mail'][0]['from']);
+    $mailer->addAddress($mailRecipient);
+    $mailer->Subject = 'SSL Expiration Info WARNING';
+    $mailer->Body = implode(PHP_EOL, $rowsWarning);
     $mailer->send();
   }
 }
