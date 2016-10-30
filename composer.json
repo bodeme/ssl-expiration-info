@@ -1,0 +1,19 @@
+{
+    "name": "mbo/ssl-expiration-info",
+    "type": "project",
+    "require": {
+        "phpmailer/phpmailer": "~5.2",
+        "symfony/yaml": "~3.1"
+    },
+    "authors": [
+        {
+            "name": "bodeme",
+            "email": "mb@qapp.de"
+        }
+    ],
+    "autoload": {
+      "psr-4": {
+        "bodeme\\": "src/bodeme/"
+      }
+    }
+}
