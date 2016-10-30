@@ -22,12 +22,12 @@ if(!is_array($yaml['hosts'])) {
   throw new \Exception('Missing hosts in yaml file.');
 }
 
-if(isset($yaml['mail'][0]['notification']) && is_array($yaml['mail'][0]['notification'])) {
-  $mailRecipients =  $yaml['mail'][0]['notification'];
+if(isset($yaml['mail']['notification']) && is_array($yaml['mail']['notification'])) {
+  $mailRecipients =  $yaml['mail']['notification'];
 }
 
-if(is_integer($yaml['ssl'][0]['threshold'])) {
-  $thresholdWarning = $yaml['ssl'][0]['threshold'];
+if(is_integer($yaml['ssl']['threshold'])) {
+  $thresholdWarning = $yaml['ssl']['threshold'];
 }
 
 foreach($yaml['hosts'] as $host) {

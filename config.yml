@@ -1,11 +1,11 @@
 --- # Check the following hosts
 
 ssl:
-  - threshold: 7
+  threshold: 7
 
 mail:
-  - from: example@example.org
-  - notification:
+  from: example@example.org
+  notification:
 #    - example@example.org
 
 hosts:
